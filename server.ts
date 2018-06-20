@@ -15,6 +15,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/score', (req, res) => {
+  let apiKey = req.body.headers.authorization;
   let score = req.body.score;
 });
 

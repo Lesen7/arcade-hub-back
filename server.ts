@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-let mysql = require('mysql');
+const mysql = require('mysql');
+import * as cors from 'cors';
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 
 let client = mysql.createConnection({
@@ -27,8 +29,13 @@ app.post('/score', (req, res) => {
 
   client.query(
     'INSERT INTO scores (iduser, idgame, score, fecha) values((SELECT id FROM users WHERE apiKey = ?), (SELECT id FROM games WHERE gamename = ?), (?), NOW())', 
-    [apiKey, gameName, score]
-  );
+    [apiKey, gameName, score], function (error, results, fields) {
+      if(!error) {
+        res.send('OK!');
+      } else {
+        res.send('error al cargar la base de datos.');
+      }
+    });
 });
 
 app.listen(3000, () => {
